@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Notify">
+    <meta name="keywords" content="notes">
+    <meta name="author" content="Ajai Kumar">
+    <title>Notify</title>
+    <link rel="icon" type="image/x-icon" href="./public/NoteApp-logo.png">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://kit.fontawesome.com/c90d939867.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css">
+    <script src="app.js" defer></script>
+    <script>
+      window.API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+        ? 'http://localhost:5000' 
+        : window.location.origin;
+    </script>
+    <style>
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+}
+
+.logoWrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+  justify-content: center;
+}
+
+.logo {
+  margin-top: -14px;
+  width: 40px;
+  height: 40px;
+}
+
+/* Notes grid */
+.notesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+  padding: 16px;
+}
+
+/* --- Mobile tweaks --- */
+@media (max-width: 768px) {
+  header {
+    flex-direction: column; /* stack logo, welcome, and buttons */
+    gap: 10px;
+    text-align: center;
+  }
+
+  .logoWrapper img {
+    height: 32px;
+    width: 32px;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .welcome h2 {
+    font-size: 18px;
+    margin: 0;
+  }
+
+  .HeaderBtns {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  main > div {
+    justify-content: center !important; /* undo/redo/clear buttons center on mobile */
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .notesGrid {
+    grid-template-columns: 1fr; /* stack notes single column */
+    padding: 12px;
+  }
+
+  .dialogHeader h2 {
+    font-size: 18px;
+  }
+
+  .formTitleInput {
+    font-size: 14px;
+  }
+}
+
+/* Even smaller (phones under 480px) */
+@media (max-width: 480px) {
+  header {
+    padding: 8px;
+  }
+
+  h1 {
+    font-size: 30px;
+  }
+
+  button {
+    font-size: 14px;
+    padding: 6px 10px;
+  }
+
+  .notesGrid {
+    gap: 12px;
+  }
+}
+@media (min-width: 1024px) {
+  header {
+    background: #5077e1;
+    color: #fff;
+  }
+
+  header h1,
+  header h2,
+  header button,
+  header i {
+    color: #fff;
+  }
+}
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="logoWrapper">
+        <img src="./public/NoteApp-logo.png" alt="Note App Logo" class="logo"/>
+        <h1>Notify</h1>
+      </div>
+      <div class="welcome">
+        <h2><p class="username"><p></h2>
+      </div>
+      <div class="HeaderBtns">
+        <button type="button" class="loginBtn"><i class="fa fa-sign-in" aria-hidden="true"></i> logIn</button>
+        <button type="button" class="themeToggleBtn" id="themeToggleBtn">🌓</button>
+      </div>
+    </header>
+
+    <main>
+      <div style="display: flex; align-items: center; justify-content: flex-end; width: 100%; padding-right:24px;">
+         <button type="button" class="undoBtn"><i class="fa fa-undo"></i></button>
+         <button type="button" class="redoBtn"><i class="fa fa-redo"></i></button>
+         <button type="button" id="clearAllBtn"><i class="fa fa-eraser" aria-hidden="true"></i> Clear All</button>
+        </div>
+      <div class="notesGrid" id="notesGrid">
+        <!-- Notes goes Here.. -->
+      </div>
+      <dialog id="noteDialog">
+        <div class="dialogHeader">
+          <h2 id="dialogTitle">Add Note</h2>
+          <button type="button" class="closeDialogBtn" onclick="closeDialog()"><i class="fa fa-times"></i></button>
+        </div>
+        <form id="noteForm">
+          <div class="formInput">
+            <label for="noteTitle" class="formLabel">Title</label>
+            <input type="text" id="noteTitle" class="formTitleInput" placeholder="Enter a Title" maxlength="60" autofocus/>
+            <p class="alertMsg" id="alertTitleMsg"></p>
+          </div>
+          <div class="formInput">
+            <p class="formLabel">Content</p>
+            <div id="noteContent" class="editorContainer"></div>
+            <p class="alertMsg" id="alertContentMsg"></p> 
+          </div>
+          <div class="dialogAction">
+            <button type="button" class="cancelBtn" onclick="closeDialog()">Cancel</button>
+            <button type="submit" class="saveNoteBtn">Save Note</button>
+          </div>
+        </form>
+      </dialog>
+      <dialog id="alertDialog"></dialog>
+      <dialog id="dialogCard"></dialog>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+  </body>
+</html>

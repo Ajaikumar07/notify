@@ -1,0 +1,26 @@
+{
+  "name": "notify",
+  "version": "1.0.0",
+  "main": "Backend/server.js",
+  "author": "Ajai Kumar A",
+  "license": "ISC",
+  "scripts": {
+    "start": "node Backend/server.js",
+    "dev": "node Backend/server.js",
+    "build": "echo 'No build step required for this project'",
+    "vercel-build": "echo 'No build step required for this project'"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.18.0",
+    "nodemailer": "^7.0.6",
+    "pbkdf2": "^3.1.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
